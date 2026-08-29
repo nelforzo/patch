@@ -42,7 +42,7 @@ const indexHtml =
   + '<title>patch</title>'
   + '<meta http-equiv="refresh" content="0;url=' + url + '">'
   + '</head>'
-  + '<body bgcolor="#e9e4d8" text="#1a1814" marginheight="18" marginwidth="10">'
+  + '<body text="#1a1814" marginheight="18" marginwidth="10">'
   + '<p>opening…</p>'
   + '<script>location.replace("' + url + '");</script>'
   + '</body></html>';
