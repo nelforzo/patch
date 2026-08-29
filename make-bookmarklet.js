@@ -45,7 +45,6 @@ const code =
   `location.href='https://nelforzo.github.io/patch/booter.html#p1:'+u;})()})()`;
 
 const href = 'javascript:' + code;
-const escHref = href.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 const md =
 `# patch — bookmarklet
@@ -54,11 +53,18 @@ Capture the **current website** into a real, editable patch with one click.
 
 ## Install
 
-Drag this link to your bookmarks bar:
+Safari (and iOS Safari) no longer have a bookmarks bar to drag into, so add
+this as a normal bookmark and paste the URL value into its address field:
 
-<p><a href="${escHref}">patch this page</a></p>
+1. Create a new bookmark (e.g. bookmark any page first).
+2. Edit the bookmark and replace its URL with the value below.
+3. (Name it something like "patch this page".)
 
-(Or copy the <code>javascript:</code> value below into a bookmark's URL field.)
+**The URL to copy:**
+
+\`\`\`
+${href}
+\`\`\`
 
 ## What it does
 
