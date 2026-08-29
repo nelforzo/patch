@@ -8,22 +8,21 @@ input[type=button]{font:inherit;padding:10px 16px}
 <body text="#1a1814" link="#1a0dab" vlink="#6b2d5c" alink="#d40e1e" marginheight="18" marginwidth="10"><basefont face="monospace">
 <p><font size="4" color="#9a9aa2">patch</font></p>
 <p id="view"><font size="3"><span id="content">loading…</span></font></p>
-<textarea id="editor" rows="7" cols="44" hidden oninput="countc()"></textarea><br>
-<span id="count"></span><br>
+<textarea id="editor" rows="7" cols="44" hidden></textarea><br>
+<font id="hint" size="1" color="#6b2d5c" hidden>max 5000 characters</font><br>
 <input type="button" id="btn" value="edit" onclick="edit()">
 <div hidden id="patch">change me!</div>
 <script>
 (function(){"use strict";
 function $(i){return document.getElementById(i);}
-var P="p1:",MAX=8000,content=$("patch").textContent;
+var P="p1:",MAX=5000,content=$("patch").textContent;
 function base(){try{return parent.location.href.split("#")[0].split("?")[0];}catch(e){return location.href.split("#")[0].split("?")[0];}}
 function b64(u){var b="",CH=0x8000;for(var i=0;i<u.length;i+=CH)b+=String.fromCharCode.apply(null,u.subarray(i,i+CH));return btoa(b).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
-window.edit=function(){var e=$("editor");e.value=content;e.hidden=false;var b=$("btn");b.value="save";b.onclick=save;$("view").hidden=true;$("count").textContent=e.value.length+" / "+MAX;$("count").style.color="";e.focus();};
-function countc(){var e=$("editor"),c=$("count");c.textContent=e.value.length+" / "+MAX;c.style.color=e.value.length>MAX?"#d40e1e":"";}
+window.edit=function(){var e=$("editor");e.value=content;e.hidden=false;var b=$("btn");b.value="save";b.onclick=save;$("view").hidden=true;$("hint").hidden=false;$("hint").color="#6b2d5c";$("hint").innerHTML="max "+MAX+" characters";e.focus();};
 function slug(t){t=(t||"").replace(/\s+/g," ").trim();return t.length>28?t.slice(0,28)+"…":t;}
 function setTitle(){var t=(content?("patch - "+slug(content)):"patch");document.title=t;try{parent.document.title=t;}catch(e){}}
 function renderc(){var esc=content.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");$("content").innerHTML=esc.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');}
-window.save=function(){var v=$("editor").value;if(v.length>MAX){$("count").textContent="too long ("+v.length+" / "+MAX+" max)";return;};content=v;$("patch").textContent=content;renderc();setTitle();var b=$("btn");b.value="edit";b.onclick=edit;$("editor").hidden=true;$("view").hidden=false;(async function(){var html="<!DOCTYPE html>\n"+document.documentElement.outerHTML,cs=new CompressionStream("deflate-raw"),ch=[],t=0;var w=cs.writable.getWriter();w.write(new TextEncoder().encode(html));w.close();var rd=cs.readable.getReader();for(;;){var r=await rd.read();if(r.done)break;ch.push(r.value);t+=r.value.length;}var u=new Uint8Array(t),p=0;for(var i=0;i<ch.length;i++){u.set(ch[i],p);p+=ch[i].length;}parent.location.href=base()+"?v="+Date.now()+"#"+P+b64(u);})();};
+window.save=function(){var v=$("editor").value;if(v.length>MAX){$("hint").style.color="#d40e1e";$("hint").innerHTML="too long — max "+MAX+" characters";return;};content=v;$("patch").textContent=content;renderc();setTitle();var b=$("btn");b.value="edit";b.onclick=edit;$("editor").hidden=true;$("view").hidden=false;$("hint").hidden=true;(async function(){var html="<!DOCTYPE html>\n"+document.documentElement.outerHTML,cs=new CompressionStream("deflate-raw"),ch=[],t=0;var w=cs.writable.getWriter();w.write(new TextEncoder().encode(html));w.close();var rd=cs.readable.getReader();for(;;){var r=await rd.read();if(r.done)break;ch.push(r.value);t+=r.value.length;}var u=new Uint8Array(t),p=0;for(var i=0;i<ch.length;i++){u.set(ch[i],p);p+=ch[i].length;}parent.location.href=base()+"?v="+Date.now()+"#"+P+b64(u);})();};
 renderc();setTitle();
 })();
 </script></body></html>
