@@ -1,0 +1,18 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>patch</title></head>
+<body bgcolor="#e9e4d8" text="#1a1814" link="#1a0dab" vlink="#6b2d5c" alink="#d40e1e" marginheight="18" marginwidth="10"><basefont face="monospace">
+<p><font size="4" color="#9a9aa2">patch</font></p>
+<p><font size="3"><span id="content">loading…</span></font></p>
+<textarea id="editor" rows="7" cols="44" hidden></textarea><br>
+<input type="button" id="btn" value="edit" onclick="edit()">
+<script type="text/plain" id="patch">change me!</script>
+<script>
+(function(){"use strict";
+function $(i){return document.getElementById(i);}
+var P="p1:",content=$("patch").textContent;
+function base(){try{return parent.location.href.split("#")[0].split("?")[0];}catch(e){return location.href.split("#")[0].split("?")[0];}}
+function b64(u){var b="",CH=0x8000;for(var i=0;i<u.length;i+=CH)b+=String.fromCharCode.apply(null,u.subarray(i,i+CH));return btoa(b).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
+window.edit=function(){var e=$("editor");e.value=content;e.hidden=false;var b=$("btn");b.value="save";b.onclick=save;e.focus();};
+window.save=function(){content=$("editor").value;$("patch").textContent=content;$("content").textContent=content;var b=$("btn");b.value="edit";b.onclick=edit;$("editor").hidden=true;(async function(){var html="<!DOCTYPE html>\n"+document.documentElement.outerHTML,cs=new CompressionStream("deflate-raw"),ch=[],t=0;var w=cs.writable.getWriter();w.write(new TextEncoder().encode(html));w.close();var rd=cs.readable.getReader();for(;;){var r=await rd.read();if(r.done)break;ch.push(r.value);t+=r.value.length;}var u=new Uint8Array(t),p=0;for(var i=0;i<ch.length;i++){u.set(ch[i],p);p+=ch[i].length;}parent.location.href=base()+"?v="+Date.now()+"#"+P+b64(u);})();};
+$("content").textContent=content;
+})();
+</script></body></html>
