@@ -131,6 +131,12 @@ a round-trip (verified in the browser E2E).
   A browser URL can carry tens of KB in the fragment; this app is ~4–9 KB.
   It will never fit a QR code (that's a ~2.9 KB ceiling) — treat a QR as a
   possible pointer to the URL, not a carrier of the site.
+- **Content length**: the app enforces a **hard limit of 8000 characters** on
+  a patch's content. That comfortably fits ~8 paragraphs of English prose
+  (≈1000+ words) while keeping the packed URL in the low thousands of chars.
+  The editor shows a live `n / 8000` counter and turns red when over the limit;
+  save is blocked above it (the browser still renders any over-limit payload a
+  bookmarklet or older URL might carry — the limit only governs new saves).
 - **Verification**:
   - `node verify.js` — Node: build → inflate round-trip equals `app.html`.
   - `node scripts/optional-browser-e2e.js` — real Chromium:
