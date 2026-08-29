@@ -47,6 +47,7 @@ node verify.js  # confirms the pack round-trips losslessly
 | `app.html` | **The website source** — becomes the payload. |
 | `build.js` | Packs `app.html` → payload, emits `index.html` + `dist/`. |
 | `verify.js` | Node lossless round-trip check of the packed URL. |
+| `BOOKMARKLET.md` | Installable bookmarklet: capture the current page into a patch (with a decoy sent to obscure the bookmark title). |
 | `ENCODING.md` | Full spec of the URL-scheme (pipeline, format, re-pack, limits). |
 
 `dist/` (URL.txt, payload.txt, payload.bin) is a local build record and is
