@@ -35,7 +35,7 @@ const code =
   `const decoy=D[Math.floor(Math.random()*D.length)];` +
   `const c=decoy+'\\n\\n'+document.title+'\\n'+location.href;` +
   `const esc=c.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');` +
-  `const tpl=atob('${b64Template}');` +
+  `const tpl=new TextDecoder().decode(Uint8Array.from(atob('${b64Template}'),q=>q.charCodeAt(0)));` +
   `const doc=tpl.replace('@@C@@',esc);` +
   `const cs=new CompressionStream('deflate-raw');const g=cs.writable.getWriter();g.write(new TextEncoder().encode(doc));g.close();` +
   `const rd=cs.readable.getReader();let ch=[],n=0;for(;;){const x=await rd.read();if(x.done)break;ch.push(x.value);n+=x.value.length;}` +
