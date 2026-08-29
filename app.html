@@ -1,28 +1,26 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>patch</title>
-<style>
+<!DOCTYPE html><html lang="en"><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>patch</title><style>
 #content{white-space:pre-wrap}
-textarea{width:100%;box-sizing:border-box;font:inherit}
-input[type=button]{font:inherit;padding:10px 16px}
-@media(max-width:620px){body{margin:0;padding:10px 12px}button,input[type=button]{min-height:44px}}
+textarea,input{font:inherit;width:100%}
+@media(max-width:620px){textarea,input{min-height:44px}}
 </style></head>
-<body text="#1a1814" link="#1a0dab" vlink="#6b2d5c" alink="#d40e1e" marginheight="18" marginwidth="10"><basefont face="monospace">
-<p><font size="4" color="#9a9aa2">patch</font></p>
-<p id="view"><font size="3"><span id="content">loading…</span></font></p>
-<textarea id="editor" rows="7" cols="44" hidden></textarea><br>
-<font id="hint" size="1" color="#6b2d5c" hidden>max 5000 characters</font><br>
-<input type="button" id="btn" value="edit" onclick="edit()">
-<div hidden id="patch">change me!</div>
+<body><basefont face="monospace">
+<b>patch</b>
+<p id=view><span id=content></span></p>
+<textarea id=editor rows=7 hidden></textarea>
+<font id=hint size=1 hidden></font>
+<input type=button id=btn value=edit onclick=e()>
+<div hidden id=patch>hi</div>
 <script>
-(function(){"use strict";
-function $(i){return document.getElementById(i);}
-var P="p1:",MAX=5000,content=$("patch").textContent;
-function base(){try{return parent.location.href.split("#")[0].split("?")[0];}catch(e){return location.href.split("#")[0].split("?")[0];}}
-function b64(u){var b="",CH=0x8000;for(var i=0;i<u.length;i+=CH)b+=String.fromCharCode.apply(null,u.subarray(i,i+CH));return btoa(b).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
-window.edit=function(){var e=$("editor");e.value=content;e.hidden=false;var b=$("btn");b.value="save";b.onclick=save;$("view").hidden=true;$("hint").hidden=false;$("hint").color="#6b2d5c";$("hint").innerHTML="max "+MAX+" characters";e.focus();};
-function slug(t){t=(t||"").replace(/\s+/g," ").trim();return t.length>28?t.slice(0,28)+"…":t;}
-function setTitle(){var t=(content?("patch - "+slug(content)):"patch");document.title=t;try{parent.document.title=t;}catch(e){}}
-function renderc(){var esc=content.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");$("content").innerHTML=esc.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');}
-window.save=function(){var v=$("editor").value;if(v.length>MAX){$("hint").style.color="#d40e1e";$("hint").innerHTML="too long — max "+MAX+" characters";return;};content=v;$("patch").textContent=content;renderc();setTitle();var b=$("btn");b.value="edit";b.onclick=edit;$("editor").hidden=true;$("view").hidden=false;$("hint").hidden=true;(async function(){var html="<!DOCTYPE html>\n"+document.documentElement.outerHTML,cs=new CompressionStream("deflate-raw"),ch=[],t=0;var w=cs.writable.getWriter();w.write(new TextEncoder().encode(html));w.close();var rd=cs.readable.getReader();for(;;){var r=await rd.read();if(r.done)break;ch.push(r.value);t+=r.value.length;}var u=new Uint8Array(t),p=0;for(var i=0;i<ch.length;i++){u.set(ch[i],p);p+=ch[i].length;}parent.location.href=base()+"?v="+Date.now()+"#"+P+b64(u);})();};
-renderc();setTitle();
-})();
+(function(){
+var P="p1:",M=1450,c=document.getElementById("patch").textContent;
+function $i(s){return document.getElementById(s)}
+function b64(u){var b="",i;for(i=0;i<u.length;i++)b+=String.fromCharCode(u[i]);return btoa(b).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
+function base(){try{return parent.location.href.split("#")[0].split("?")[0]}catch(e){return location.href.split("#")[0].split("?")[0]}}
+function slug(t){var s=(t||"").replace(/\s+/g," ").trim();return s.length>28?s.slice(0,28)+"…":s}
+function tt(){var t=c?"patch - "+slug(c):"patch";document.title=t;try{parent.document.title=t}catch(e){}}
+function rc(){var e=c.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");$i("content").innerHTML=e.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank">$1</a>')}
+window.e=function(){var e=$i("editor");e.value=c;e.hidden=0;var b=$i("btn");b.value="save";b.onclick=s;$i("view").hidden=1;$i("hint").innerHTML="max "+M;$i("hint").hidden=0;e.focus()}
+window.s=function(){var v=$i("editor").value;if(v.length>M){$i("hint").innerHTML="max "+M;return}c=v;$i("patch").textContent=c;rc();tt();var b=$i("btn");b.value="edit";b.onclick=e;$i("editor").hidden=1;$i("view").hidden=0;$i("hint").hidden=1;(async function(){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML,cs=new CompressionStream("deflate-raw"),g=cs.writable.getWriter(),ch=[],n=0;g.write(new TextEncoder().encode(h));g.close();var rd=cs.readable.getReader(),x;for(;;){x=await rd.read();if(x.done)break;ch.push(x.value);n+=x.value.length}var o=new Uint8Array(n),p=0,i;for(i=0;i<ch.length;i++){o.set(ch[i],p);p+=ch[i].length}parent.location.href=base()+"?v="+Date.now()+"#"+P+b64(o)})()}
+rc();tt();
+})()
 </script></body></html>

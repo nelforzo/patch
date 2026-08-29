@@ -44,8 +44,9 @@ payload tiny and the page renderable anywhere with zero dependencies. The
 booter (`booter.html`) follows the same rule.
 
 ### Typical numbers
-`app.html` ≈ 2.6 KB → deflate ≈ 1.3 KB (−50%) → base64url ≈ 1.7 KB payload →
-~1.7 KB URL.
+`app.html` ≈ 2.3 KB → deflate ≈ 1.15 KB (−50%) → base64url ≈ 1.54 KB payload →
+~1.5 KB URL (relative base). QR-optimized so content up to ~1,450 chars still
+fits a Version-40/EC-L QR (see §5).
 
 ### Why deflate-raw
 No npm dependencies. Node's `zlib` produces it at build time, and every modern
@@ -127,18 +128,20 @@ a round-trip (verified in the browser E2E).
 - **Lossless**: `deflate-raw` + base64 round-trip is byte-exact (unlike the
   earlier QR path, no multi-byte/UTF-8 corruption — the whole document travels
   as a base64-url ASCII string).
-- **Size**: the only real bound is comfortable sharing, not a spec ceiling.
-  A browser URL can carry tens of KB in the fragment; this app is ~4–9 KB.
-  It will never fit a QR code (that's a ~2.9 KB ceiling) — treat a QR as a
-  possible pointer to the URL, not a carrier of the site.
-- **Content length**: the app enforces a **hard limit of 5000 characters** on
-  a patch's content. That comfortably fits ~5–6 paragraphs of English prose
-  (≈700+ words) while keeping the packed URL modest. The editor shows a small
-  static hint — `max 5000 characters` — under the input; it does **not** count
-  as you type. If the user tries to save more than the limit, save is simply
-  blocked (a `too long` warning replaces the hint, the editor stays open) —
-  the browser still renders any pre-existing over-limit payload, the limit
-  only governs new saves.
+- **Size**: the app and its content are sized to stay inside the QR ceiling —
+  see the QR-friendliness note below. A URL can also carry more (tens of KB in
+  the fragment) but the 1450-char limit + trimmed app keep it scannable.
+- **Content length**: the app enforces a **hard limit of 1450 characters** on a
+  patch's content — sized so that a maximally-long post, packed with the whole
+  minimal app, **still fits inside a Version-40 / EC-L QR code** (2,953-byte
+  ceiling). The editor shows a small static hint — `max 1450` — under the
+  input; it does **not** count as you type. If a save exceeds the limit it is
+  simply blocked (the hint stays, the editor stays open). Rendering still
+  shows any pre-existing over-limit payload; the limit only governs new saves.
+- **QR-friendliness**: the app is aggressively trimmed (≈1,155 B deflated) so
+  a QR payload is `app(1,155 B) + content(≈0.4–0.5 B/char)`. At the 1450-char
+  cap the resulting URL is ≈2,000–2,600 chars — comfortably inside the QR
+  ceiling (verified: realistic English prose → URL ~2,021 chars, ~930 spare).
 - **Verification**:
   - `node verify.js` — Node: build → inflate round-trip equals `app.html`.
   - `node scripts/optional-browser-e2e.js` — real Chromium:

@@ -10,11 +10,11 @@ const fs = require('fs');
 const path = require('path');
 
 const app = fs.readFileSync(path.join(__dirname, 'app.html'), 'utf8');
-if (!app.includes('id="patch"')) { console.error('app.html missing #patch'); process.exit(1); }
+if (!/id="?patch"?>/.test(app)) { console.error('app.html missing #patch'); process.exit(1); }
 
 // Replace the default content inside #patch with a sentinel the running
 // bookmarklet swaps for the real content.
-const template = app.replace(/id="patch">[\s\S]*?<\/div>/, 'id="patch">@@C@@</div>');
+const template = app.replace(/id="?patch"?>[\s\S]*?<\/div>/, 'id="patch">@@C@@</div>');
 if (!template.includes('@@C@@')) { console.error('could not place content sentinel'); process.exit(1); }
 
 // base64 of the whole template (JS-safe to embed in the bookmarklet)
