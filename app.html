@@ -20,7 +20,8 @@ function b64(u){var b="",CH=0x8000;for(var i=0;i<u.length;i+=CH)b+=String.fromCh
 window.edit=function(){var e=$("editor");e.value=content;e.hidden=false;var b=$("btn");b.value="save";b.onclick=save;e.focus();};
 function slug(t){t=(t||"").replace(/\s+/g," ").trim();return t.length>28?t.slice(0,28)+"…":t;}
 function setTitle(){var t=(content?("patch - "+slug(content)):"patch");document.title=t;try{parent.document.title=t;}catch(e){}}
-window.save=function(){content=$("editor").value;$("patch").textContent=content;$("content").textContent=content;setTitle();var b=$("btn");b.value="edit";b.onclick=edit;$("editor").hidden=true;(async function(){var html="<!DOCTYPE html>\n"+document.documentElement.outerHTML,cs=new CompressionStream("deflate-raw"),ch=[],t=0;var w=cs.writable.getWriter();w.write(new TextEncoder().encode(html));w.close();var rd=cs.readable.getReader();for(;;){var r=await rd.read();if(r.done)break;ch.push(r.value);t+=r.value.length;}var u=new Uint8Array(t),p=0;for(var i=0;i<ch.length;i++){u.set(ch[i],p);p+=ch[i].length;}parent.location.href=base()+"?v="+Date.now()+"#"+P+b64(u);})();};
-$("content").textContent=content;setTitle();
+function renderc(){var esc=content.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");$("content").innerHTML=esc.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');}
+window.save=function(){content=$("editor").value;$("patch").textContent=content;renderc();setTitle();var b=$("btn");b.value="edit";b.onclick=edit;$("editor").hidden=true;(async function(){var html="<!DOCTYPE html>\n"+document.documentElement.outerHTML,cs=new CompressionStream("deflate-raw"),ch=[],t=0;var w=cs.writable.getWriter();w.write(new TextEncoder().encode(html));w.close();var rd=cs.readable.getReader();for(;;){var r=await rd.read();if(r.done)break;ch.push(r.value);t+=r.value.length;}var u=new Uint8Array(t),p=0;for(var i=0;i<ch.length;i++){u.set(ch[i],p);p+=ch[i].length;}parent.location.href=base()+"?v="+Date.now()+"#"+P+b64(u);})();};
+renderc();setTitle();
 })();
 </script></body></html>
